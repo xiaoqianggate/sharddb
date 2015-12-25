@@ -21,4 +21,21 @@ public class UserHashRule extends RouterRule {
     public void setUserpin(String userpin) {
         this.userpin = userpin;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserHashRule)) return false;
+
+        UserHashRule that = (UserHashRule) o;
+
+        if (userpin != null ? !userpin.equals(that.userpin) : that.userpin != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return userpin != null ? userpin.hashCode() : 0;
+    }
 }

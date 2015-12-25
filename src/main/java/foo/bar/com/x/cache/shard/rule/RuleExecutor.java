@@ -21,6 +21,7 @@ public class RuleExecutor implements ApplicationListener {
         map.put(new UserHashRule("pin"),new UserHashRouterStrategy());
     }
     public Router explain(RouterRule rule){
+        System.out.println(map.get(rule));
          return map.get(rule).explain(rule);
     }
 
