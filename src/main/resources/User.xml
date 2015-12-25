@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.User" class="com.x.db.shard.bean.User">
+        <result property="id" column="id"/>
+        <result property="userpin" column="userpin"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="User.columns">
+	    <![CDATA[
+        id ,userpin 
+	    ]]>
+	</sql>
+	
+    <insert id="User.insert" >
+    <![CDATA[
+        INSERT INTO [physicTableName] (
+        	id ,
+        	userpin 
+        ) VALUES (
+        	#id# ,
+        	#userpin# 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="User.update" >
+    <![CDATA[
+        UPDATE [physicTableName] SET
+	        userpin = #userpin# 
+        WHERE 
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="User.delete">
+    <![CDATA[
+        DELETE FROM [physicTableName] WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="User.getById" resultMap="RM.User">
+	    SELECT <include refid="User.columns"/>
+	    <![CDATA[
+	        FROM [physicTableName]
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+
+	
+</sqlMap>
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Order" class="com.x.db.shard.bean.Order">
+        <result property="erp" column="erp"/>
+        <result property="userpin" column="userpin"/>
+        <result property="fee" column="fee"/>
+        <result property="id" column="id"/>
+        <result property="issue" column="issue"/>
+        <result property="lotteryType" column="lotteryType"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Order.columns">
+	    <![CDATA[
+        erp,userpin,fee,id,lotteryType,issue
+	    ]]>
+	</sql>
+	
+    <insert id="Order.insert" >
+    <![CDATA[
+        INSERT INTO [physicTableName] (
+        	erp ,
+        	userpin ,
+        	fee,
+        	id,
+        	lotteryType,
+        	issue
+        ) VALUES (
+        	#erp# ,
+        	#userpin# ,
+        	#fee# ,
+        	#id#,
+        	#lotteryType#,
+        	#issue#
+        )
+    ]]>
+    </insert>
+
+    <update id="Order.update" >
+    <![CDATA[
+        UPDATE [physicTableName] SET
+	        erp = #erp# ,
+	        userpin = #userpin# ,
+	        fee = #fee#,
+	        lotteryType = #lotteryType#,
+	        issue = #issue#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="Order.delete">
+    <![CDATA[
+        DELETE FROM [physicTableName] WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="Order.getById" resultMap="RM.Order">
+	    SELECT <include refid="Order.columns"/>
+	    <![CDATA[
+	        FROM [physicTableName] 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+
+	
+</sqlMap>
+

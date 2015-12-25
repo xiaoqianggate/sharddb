@@ -8,5 +8,6 @@ Config 2.0/" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
               errorTracingEnabled="true"
               maxRequests="32"
               maxSessions="10" maxTransactions="5" useStatementNamespaces="true"/>
-    <sqlMap resource="Amount.xml"/>
+    <sqlMap resource="Order.xml"/>
+    <sqlMap resource="User.xml"/>
 </sqlMapConfig>

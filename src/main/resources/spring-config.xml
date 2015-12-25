@@ -11,4 +11,5 @@
     <import resource="spring-mysql-xa.xml"></import>
     <import resource="spring-dao-shard.xml"></import>
     <import resource="spring-ibatis.xml"></import>
+    <import resource="spring-service.xml"></import>
 </beans>
