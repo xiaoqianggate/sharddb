@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire="byName">
+    <!-- mysql数据源1 -->
+    <bean id="mysqlDSSingle1" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.147.86:3306/cptest?autoReconnect=true"/>
+        <property name="username" value="jdlottery"/>
+        <property name="password" value="jdlottery"/>
+        <property value="15000" name="maxWait"/>
+        <property value="true" name="useUnfairLock"/>
+        <property value="10" name="initialSize"/>
+        <property value="10" name="minIdle"/>
+        <property value="50" name="maxActive"/>
+        <property value="60000" name="timeBetweenEvictionRunsMillis"/>
+        <property value="180000" name="minEvictableIdleTimeMillis"/>
+        <property value="SELECT 'x'" name="validationQuery"/>
+        <property value="false" name="testWhileIdle"/>
+        <property value="false" name="testOnBorrow"/>
+        <property value="false" name="testOnReturn"/>
+        <property value="false" name="poolPreparedStatements"/>
+        <property value="-1" name="maxPoolPreparedStatementPerConnectionSize"/>
+    </bean>
+    <bean id="mysqlDSSingle2" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.147.87:3306/cptest?autoReconnect=true"/>
+        <property name="username" value="jdlottery"/>
+        <property name="password" value="jdlottery"/>
+        <property value="15000" name="maxWait"/>
+        <property value="true" name="useUnfairLock"/>
+        <property value="10" name="initialSize"/>
+        <property value="10" name="minIdle"/>
+        <property value="50" name="maxActive"/>
+        <property value="60000" name="timeBetweenEvictionRunsMillis"/>
+        <property value="180000" name="minEvictableIdleTimeMillis"/>
+        <property value="SELECT 'x'" name="validationQuery"/>
+        <property value="false" name="testWhileIdle"/>
+        <property value="false" name="testOnBorrow"/>
+        <property value="false" name="testOnReturn"/>
+        <property value="false" name="poolPreparedStatements"/>
+        <property value="-1" name="maxPoolPreparedStatementPerConnectionSize"/>
+    </bean>
+
+    <!--&lt;!&ndash; 事务处理 &ndash;&gt;-->
+    <!--<bean id="single1TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="mysqlDSSingle1"/>-->
+    <!--</bean>-->
+    <!--<bean id="single2TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="mysqlDSSingle2"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; spring　事务模板 我在项目当中用的是编程式事务&ndash;&gt;-->
+    <!--<bean id="single1TransactionTemplate"-->
+          <!--class="org.springframework.transaction.support.TransactionTemplate">-->
+        <!--<property name="transactionManager">-->
+            <!--<ref bean="single1TransactionManager" />-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean id="single1JdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">-->
+        <!--<constructor-arg>-->
+            <!--<ref bean="mysqlDSSingle1" />-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+    <!--<bean id="single2TransactionTemplate"-->
+          <!--class="org.springframework.transaction.support.TransactionTemplate">-->
+        <!--<property name="transactionManager">-->
+            <!--<ref bean="single2TransactionManager" />-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean id="single2JdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">-->
+        <!--<constructor-arg>-->
+            <!--<ref bean="mysqlDSSingle2" />-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--数据源-->
+    <util:map id="singleDsMap" key-type="java.lang.String">
+        <entry key="0">
+            <ref bean="mysqlDSSingle1"/>
+        </entry>
+        <entry key="1">
+            <ref bean="mysqlDSSingle1"/>
+        </entry>
+        <entry key="2">
+            <ref bean="mysqlDSSingle2"/>
+        </entry>
+    </util:map>
+</beans>
