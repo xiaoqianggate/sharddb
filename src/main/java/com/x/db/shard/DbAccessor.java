@@ -1,6 +1,7 @@
 package com.x.db.shard;
 
 import com.ibatis.sqlmap.engine.mapping.sql.Router;
+import com.x.db.shard.route.Route;
 import com.x.db.shard.rule.DefaultDbRule;
 import com.x.db.shard.rule.RouterRule;
 import com.x.db.shard.rule.RuleExecutor;
@@ -16,7 +17,7 @@ import java.util.Map;
  * Time: 下午1:13
  * To change this template use File | Settings | File Templates.
  */
-public abstract class DbAccessor<T extends JdbcAccessor> {
+public abstract class DbAccessor<T extends JdbcAccessor> implements Route {
     private RuleExecutor ruleExecutor=new RuleExecutor();
     protected Map<String,DataSource> dsMap;
     protected Map<String,DataSource> xaDsMap;
@@ -31,14 +32,12 @@ public abstract class DbAccessor<T extends JdbcAccessor> {
         Router router= ruleExecutor.explain(rule);
         return sqlTemplate(router.db(),Router.xa());
     }
-
     /**
      * 默认数据库访问模板
      * @return
      */
     public  T route(){
-        Router router= ruleExecutor.explain(new DefaultDbRule());
-        return sqlTemplate(router.db(),Router.xa());
+        return route(new DefaultDbRule());
     }
     public DataSource dataSource(RouterRule rule){
         Router router= ruleExecutor.explain(rule);

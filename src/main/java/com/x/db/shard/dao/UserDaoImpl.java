@@ -23,8 +23,9 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public long add(User user) {
-        return (Long) ibatisDbAccessor.route(new UserHashRule(user.getUserpin()))
+        ibatisDbAccessor.route(new UserHashRule(user.getUserpin()))
                 .insert("User.insert",user);
+        return user.getId();
     }
 
     @Override

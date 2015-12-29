@@ -2,11 +2,14 @@ package com.x.db.shard.service;
 
 import com.x.db.shard.TxAccessor;
 import com.x.db.shard.bean.Order;
+import com.x.db.shard.bean.User;
 import com.x.db.shard.dao.IOrderDao;
 import com.x.db.shard.dao.IUserDao;
 import com.x.db.shard.rule.LotteryTypeAndIdRule;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,28 +42,40 @@ public class OrderService {
         System.out.println(id);
 
     }
-    public void addOrderAndModify(final Order order){
-        txAccessor.route(new LotteryTypeAndIdRule(order.getLotteryType(),order.getId()),false).execute(
-                new TransactionCallback<Object>() {
-                    @Override
-                    public Object doInTransaction(TransactionStatus status) {
-                        try{
-                            orderDao.add(order);
-                            order.setUserpin("xdddd");
-                            int count=orderDao.update(order);
-                            if(count<1){
-                                throw new Exception("更新失败");
-                            }
-                        }catch (Exception e){
-                            status.setRollbackOnly();
-                            throw new RuntimeException(e);
-                        }
-                        return null;
-                    }
-                }
-        ) ;
+    public void addOrders(final List<Order> orders){
+        if(orders!=null)
+            for(Order order:orders){
+                orderDao.add(order);
+            }
 
 
+    }
+    public void addOrderAndUser(final Order order, final User user){
+          txAccessor.route(true).execute(new TransactionCallback<Object>() {
+              @Override
+              public Object doInTransaction(TransactionStatus status) {
+                          boolean flag = true;
+                          try {
+                              orderDao.add(order);
+                              userDao.add(user);
+                          } catch (Exception e) {
+                              e.printStackTrace();
+                              flag = false;
+                          } finally {
+                              if (!flag) {
+                                  status.setRollbackOnly();
+                              }
+                          }
+                          return flag;
+                      }
+                  }) ;
+
+    }
+    public void addOrder(final List<Order> orders){
+        if(orders!=null)
+            for(Order order:orders){
+                orderDao.add(order);
+            }
     }
     public Order queryOrder(long orderId,int lotteryType){
         return orderDao.get(orderId,lotteryType);
@@ -69,5 +84,22 @@ public class OrderService {
 
     public void setTxAccessor(TxAccessor txAccessor) {
         this.txAccessor = txAccessor;
+    }
+
+    public void addOrderAndModify(final Order order) {
+        txAccessor.route(new LotteryTypeAndIdRule(order.getLotteryType(),order.getId())).execute(new TransactionCallback<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus status) {
+                try{
+                    orderDao.add(order);
+                    order.setFee(9000l);
+                    orderDao.update(order);
+                }catch (Exception e){
+                    status.setRollbackOnly();
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
     }
 }

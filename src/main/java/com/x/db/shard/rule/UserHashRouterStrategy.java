@@ -12,7 +12,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.Router;
 public class UserHashRouterStrategy implements RouterStrategy<UserHashRule>{
     public Router explain(UserHashRule rule){
          Router.db("0");
-         Router.tableName((rule.getUserpin().hashCode()%4+1)+"");
+         Router.tableName("user_"+(rule.getUserpin().hashCode()%4+1));
         return Router.router();
     }
 }
