@@ -92,7 +92,7 @@ public class OrderService {
             public Object doInTransaction(TransactionStatus status) {
                 try{
                     orderDao.add(order);
-                    order.setFee(9000l);
+                    order.setFee(19000l);
                     orderDao.update(order);
                 }catch (Exception e){
                     status.setRollbackOnly();

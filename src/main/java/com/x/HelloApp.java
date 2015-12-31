@@ -19,9 +19,9 @@ public class HelloApp {
 //        Order order1=orderService.queryOrder(11451031881267l,1);
 //        System.out.println(order1);
 //        orders();
-//        addOrderAndModify();
+        addOrderAndModify();
 //        addOrderAndUser();
-        orders();
+//        orders();
     }
     /**
      * 订单路由

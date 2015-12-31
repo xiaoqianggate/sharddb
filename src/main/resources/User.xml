@@ -22,7 +22,7 @@
     <![CDATA[
         INSERT INTO [physicTableName] (
         	id ,
-        	userpin 
+        	userpin
         ) VALUES (
         	#id# ,
         	#userpin# 
