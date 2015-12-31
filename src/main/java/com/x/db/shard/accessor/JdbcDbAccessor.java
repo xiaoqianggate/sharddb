@@ -1,4 +1,4 @@
-package com.x.db.shard;
+package com.x.db.shard.accessor;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public  class JdbcDbAccessor extends DbAccessor<JdbcTemplate> {
     @Override
-    protected JdbcTemplate sqlTemplate(String db, boolean xa) {
-        return new JdbcTemplate(xa?xaDsMap.get(db):dsMap.get(db));
+    protected JdbcTemplate sqlTemplate(String db) {
+        return new JdbcTemplate(ds(db));
     }
 }

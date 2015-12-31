@@ -1,10 +1,9 @@
-package com.x.db.shard;
+package com.x.db.shard.accessor;
 
 import com.ibatis.sqlmap.engine.mapping.sql.Router;
-import com.x.db.shard.route.Route;
-import com.x.db.shard.rule.DefaultDbRule;
-import com.x.db.shard.rule.RouterRule;
-import com.x.db.shard.rule.RuleExecutor;
+import com.x.db.shard.router.IRouter;
+import com.x.db.shard.router.rule.RouterRule;
+import com.x.db.shard.router.rule.RuleExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -18,7 +17,7 @@ import java.util.Map;
  * Time: 下午1:13
  * To change this template use File | Settings | File Templates.
  */
-public  class TxAccessor implements Route<TransactionTemplate> {
+public  class TxAccessor implements IRouter{
     private RuleExecutor ruleExecutor=new RuleExecutor();
     protected Map<String,DataSource> dsMap;
     private TransactionTemplate transactionTemplate;
@@ -27,23 +26,21 @@ public  class TxAccessor implements Route<TransactionTemplate> {
      * @param rule
      * @return
      */
-    public  TransactionTemplate route(RouterRule rule){
-        Router router= ruleExecutor.explain(rule);
-        DataSource ds=dsMap.get(router.db());
-        return new TransactionTemplate(new DataSourceTransactionManager(ds));
+    public Router route(RouterRule rule){
+        return  ruleExecutor.explain(rule);
+    }
+    public TransactionTemplate tx(RouterRule rule){
+        Router.resetXa();
+        return new TransactionTemplate(new DataSourceTransactionManager(dsMap.get(route(rule).db())));
     }
     /**
      * 默认路由规则，基础库，非分布式事务
      * @return
      */
-    public  TransactionTemplate route(boolean xa){
+    public  TransactionTemplate xa(){
         Router.resetXa();
-        if(xa){
-            Router.xa(true);
-            return transactionTemplate;
-        }else{
-            return route(new DefaultDbRule());
-        }
+        Router.xa(true);
+        return transactionTemplate;
     }
     public void setDsMap(Map<String, DataSource> dsMap) {
         this.dsMap = dsMap;

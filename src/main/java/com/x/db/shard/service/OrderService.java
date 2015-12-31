@@ -1,11 +1,11 @@
 package com.x.db.shard.service;
 
-import com.x.db.shard.TxAccessor;
+import com.x.db.shard.accessor.TxAccessor;
 import com.x.db.shard.bean.Order;
 import com.x.db.shard.bean.User;
 import com.x.db.shard.dao.IOrderDao;
 import com.x.db.shard.dao.IUserDao;
-import com.x.db.shard.rule.LotteryTypeAndIdRule;
+import com.x.db.shard.router.rule.LotteryTypeAndIdRule;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
@@ -51,24 +51,24 @@ public class OrderService {
 
     }
     public void addOrderAndUser(final Order order, final User user){
-          txAccessor.route(true).execute(new TransactionCallback<Object>() {
+          txAccessor.xa().execute(new TransactionCallback<Object>() {
               @Override
               public Object doInTransaction(TransactionStatus status) {
-                          boolean flag = true;
-                          try {
-                              orderDao.add(order);
-                              userDao.add(user);
-                          } catch (Exception e) {
-                              e.printStackTrace();
-                              flag = false;
-                          } finally {
-                              if (!flag) {
-                                  status.setRollbackOnly();
-                              }
-                          }
-                          return flag;
+                  boolean flag = true;
+                  try {
+                      orderDao.add(order);
+                      userDao.add(user);
+                  } catch (Exception e) {
+                      e.printStackTrace();
+                      flag = false;
+                  } finally {
+                      if (!flag) {
+                          status.setRollbackOnly();
                       }
-                  }) ;
+                  }
+                  return flag;
+              }
+          }) ;
 
     }
     public void addOrder(final List<Order> orders){
@@ -87,7 +87,7 @@ public class OrderService {
     }
 
     public void addOrderAndModify(final Order order) {
-        txAccessor.route(new LotteryTypeAndIdRule(order.getLotteryType(),order.getId())).execute(new TransactionCallback<Object>() {
+        txAccessor.tx(new LotteryTypeAndIdRule(order.getLotteryType(), order.getId())).execute(new TransactionCallback<Object>() {
             @Override
             public Object doInTransaction(TransactionStatus status) {
                 try{

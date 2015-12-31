@@ -1,4 +1,4 @@
-package com.x.db.shard;
+package com.x.db.shard.accessor;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
@@ -13,8 +13,8 @@ import org.springframework.orm.ibatis.SqlMapClientTemplate;
 public  class IbatisDbAccessor extends DbAccessor<SqlMapClientTemplate> {
     private SqlMapClient sqlMapClient;
     @Override
-    public SqlMapClientTemplate sqlTemplate(String db,boolean xa) {
-        return new SqlMapClientTemplate(xa?xaDsMap.get(db):dsMap.get(db),sqlMapClient);
+    public SqlMapClientTemplate sqlTemplate(String db) {
+        return new SqlMapClientTemplate(ds(db),sqlMapClient);
     }
     public void setSqlMapClient(SqlMapClient sqlMapClient) {
         this.sqlMapClient = sqlMapClient;

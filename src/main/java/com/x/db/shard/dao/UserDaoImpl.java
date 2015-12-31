@@ -1,8 +1,8 @@
 package com.x.db.shard.dao;
 
-import com.x.db.shard.DbAccessor;
+import com.x.db.shard.accessor.DbAccessor;
 import com.x.db.shard.bean.User;
-import com.x.db.shard.rule.UserHashRule;
+import com.x.db.shard.router.rule.UserHashRule;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 /**
@@ -17,26 +17,26 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User get(long id,String userpin) {
-        return (User) ibatisDbAccessor.route(new UserHashRule(userpin))
+        return (User) ibatisDbAccessor.accessor(new UserHashRule(userpin))
                 .queryForObject("User.getById",id);
     }
 
     @Override
     public long add(User user) {
-        ibatisDbAccessor.route(new UserHashRule(user.getUserpin()))
+        ibatisDbAccessor.accessor(new UserHashRule(user.getUserpin()))
                 .insert("User.insert",user);
         return user.getId();
     }
 
     @Override
     public int delete(long  id,String userpin) {
-        return (Integer) ibatisDbAccessor.route(new UserHashRule(userpin))
+        return (Integer) ibatisDbAccessor.accessor(new UserHashRule(userpin))
                 .insert("User.delete",id);
     }
 
     @Override
     public int update(User user) {
-        return (Integer) ibatisDbAccessor.route(new UserHashRule(user.getUserpin()))
+        return (Integer) ibatisDbAccessor.accessor(new UserHashRule(user.getUserpin()))
                 .insert("User.delete",user);
     }
 

@@ -1,4 +1,4 @@
-package com.x.db.shard.rule;
+package com.x.db.shard.router.rule;
 
 import com.ibatis.sqlmap.engine.mapping.sql.Router;
 

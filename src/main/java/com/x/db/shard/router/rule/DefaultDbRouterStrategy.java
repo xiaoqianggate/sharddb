@@ -1,4 +1,4 @@
-package com.x.db.shard.rule;
+package com.x.db.shard.router.rule;
 
 import com.ibatis.sqlmap.engine.mapping.sql.Router;
 
@@ -9,10 +9,9 @@ import com.ibatis.sqlmap.engine.mapping.sql.Router;
  * Time: 下午12:26
  * To change this template use File | Settings | File Templates.
  */
-public class UserHashRouterStrategy implements RouterStrategy<UserHashRule>{
-    public Router explain(UserHashRule rule){
+public class DefaultDbRouterStrategy implements RouterStrategy<LotteryTypeAndIdRule>{
+    public Router explain(LotteryTypeAndIdRule rule){
          Router.db("0");
-         Router.tableName("user_"+(rule.getUserpin().hashCode()%4+1));
         return Router.router();
     }
 }
